@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>College Details – CollegeFind India</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    body {
+      font-family: 'DM Sans', sans-serif;
+      color: #0B1E3D;
+      background: #F8F9FC;
+      overflow-x: hidden;
+    }
+ 
+    /* ── NAVBAR ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #EEF1F8;
+      padding: 0 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .logo { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 20px; color: #0B1E3D; text-decoration: none; }
+    .logo span { color: #1A56DB; }
+    .back-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: #EEF1F8; color: #0B1E3D;
+      border: none; padding: 8px 18px; border-radius: 8px;
+      font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; text-decoration: none; transition: background 0.2s;
+    }
+    .back-btn:hover { background: #dde3f0; }
+ 
+    /* ── HERO BANNER ── */
+    .college-hero {
+      background: linear-gradient(135deg, #0B1E3D 0%, #1A3A6E 60%, #1A56DB 100%);
+      padding: 48px 5% 40px;
+      position: relative; overflow: hidden;
+    }
+    .college-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 80% 50%, rgba(255,107,53,0.12) 0%, transparent 60%);
+    }
+    .hero-inner {
+      max-width: 960px; margin: 0 auto;
+      display: flex; align-items: center; gap: 28px;
+      position: relative;
+    }
+    .college-logo-big {
+      width: 80px; height: 80px; border-radius: 16px;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Sora', sans-serif; font-weight: 700; font-size: 22px;
+      color: #fff; flex-shrink: 0;
+    }
+    .hero-text h1 {
+      font-family: 'Sora', sans-serif; font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 700; color: #fff; margin-bottom: 8px;
+    }
+    .hero-location { font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 14px; }
+    .hero-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+    .hbadge {
+      font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 99px;
+      background: rgba(255,255,255,0.15); color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .hbadge-gold { background: #F5A623; color: #0B1E3D; border: none; }
+ 
+    /* ── QUICK STATS ROW ── */
+    .quick-stats {
+      background: #fff;
+      border-bottom: 1px solid #EEF1F8;
+    }
+    .qs-inner {
+      max-width: 960px; margin: 0 auto;
+      display: flex; flex-wrap: wrap;
+    }
+    .qs-item {
+      flex: 1; min-width: 140px;
+      padding: 20px 24px; text-align: center;
+      border-right: 1px solid #EEF1F8;
+    }
+    .qs-item:last-child { border-right: none; }
+    .qs-val { font-family: 'Sora', sans-serif; font-size: 22px; font-weight: 700; color: #1A56DB; }
+    .qs-label { font-size: 12px; color: #9AA3B5; margin-top: 3px; }
+ 
+    /* ── MAIN LAYOUT ── */
+    .main-wrap {
+      max-width: 960px; margin: 32px auto; padding: 0 5%;
+      display: grid; grid-template-columns: 1fr 320px; gap: 24px;
+    }
+ 
+    /* ── CARDS ── */
+    .card {
+      background: #fff; border: 1px solid #EEF1F8;
+      border-radius: 16px; padding: 24px; margin-bottom: 20px;
+    }
+    .card-heading {
+      font-family: 'Sora', sans-serif; font-size: 16px; font-weight: 600;
+      color: #0B1E3D; margin-bottom: 18px;
+      padding-bottom: 12px; border-bottom: 1px solid #EEF1F8;
+      display: flex; align-items: center; gap: 8px;
+    }
+ 
+    /* ── COURSES TABLE ── */
+    .courses-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .courses-table th {
+      background: #F8F9FC; color: #9AA3B5; font-weight: 500;
+      padding: 10px 14px; text-align: left; font-size: 12px;
+      border-bottom: 1px solid #EEF1F8;
+    }
+    .courses-table td {
+      padding: 12px 14px; border-bottom: 1px solid #EEF1F8;
+      color: #0B1E3D;
+    }
+    .courses-table tr:last-child td { border-bottom: none; }
+    .courses-table tr:hover td { background: #F8F9FC; }
+    .course-badge {
+      display: inline-block; font-size: 11px; padding: 3px 8px;
+      border-radius: 99px; background: #E8F0FE; color: #1A56DB; font-weight: 500;
+    }
+ 
+    /* ── ABOUT ── */
+    .about-text { font-size: 14px; color: #3D4560; line-height: 1.8; }
+ 
+    /* ── FACILITIES ── */
+    .facilities-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+    .facility-item {
+      background: #F8F9FC; border: 1px solid #EEF1F8;
+      border-radius: 10px; padding: 14px 10px; text-align: center;
+    }
+    .facility-icon { font-size: 22px; margin-bottom: 6px; }
+    .facility-name { font-size: 12px; color: #3D4560; font-weight: 500; }
+ 
+    /* ── SIDEBAR ── */
+    .contact-card { background: #fff; border: 1px solid #EEF1F8; border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+    .contact-heading {
+      font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 600;
+      color: #0B1E3D; margin-bottom: 16px;
+    }
+    .contact-row {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 0; border-bottom: 1px solid #EEF1F8;
+    }
+    .contact-row:last-of-type { border-bottom: none; }
+    .contact-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: #E8F0FE; display: flex; align-items: center;
+      justify-content: center; font-size: 16px; flex-shrink: 0;
+    }
+    .contact-label { font-size: 11px; color: #9AA3B5; margin-bottom: 2px; }
+    .contact-val { font-size: 13px; font-weight: 500; color: #0B1E3D; word-break: break-all; }
+    .contact-val a { color: #1A56DB; text-decoration: none; }
+    .contact-val a:hover { text-decoration: underline; }
+ 
+    .apply-btn {
+      display: block; width: 100%; padding: 13px;
+      background: #1A56DB; color: #fff;
+      border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 600; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; text-align: center; text-decoration: none;
+      transition: background 0.2s; margin-top: 16px;
+    }
+    .apply-btn:hover { background: #1347c0; }
+    .save-btn {
+      display: block; width: 100%; padding: 11px;
+      background: #fff; color: #1A56DB;
+      border: 1.5px solid #1A56DB; border-radius: 10px;
+      font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; text-align: center;
+      transition: background 0.2s; margin-top: 10px;
+    }
+    .save-btn:hover { background: #E8F0FE; }
+ 
+    /* ── KEY FACTS ── */
+    .facts-list { list-style: none; }
+    .facts-list li {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid #EEF1F8;
+      font-size: 14px;
+    }
+    .facts-list li:last-child { border-bottom: none; }
+    .fact-key { color: #9AA3B5; }
+    .fact-val { font-weight: 600; color: #0B1E3D; text-align: right; }
+ 
+    /* ── NOT FOUND ── */
+    .not-found {
+      text-align: center; padding: 80px 20px;
+      color: #9AA3B5;
+    }
+ 
+    /* ── RESPONSIVE ── */
+    @media (max-width: 720px) {
+      .main-wrap { grid-template-columns: 1fr; }
+      .hero-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .qs-item { min-width: 50%; }
+    }
+  </style>
+</head>
+<body>
+ 
+<!-- NAVBAR -->
+<nav>
+  <a class="logo" href="index.html">College<span>Find</span></a>
+  <a class="back-btn" href="index.html">← Back to Search</a>
+</nav>
+ 
+<!-- Content injected by JS below -->
+<div id="page-content"></div>
+ 
+<script>
+  // ── SAME COLLEGE DATA (copy this from your index.html) ──
+  const colleges = [
+    {
+      id: 1, name: "IIT Delhi", abbr: "IIT",
+      location: "New Delhi, Delhi", state: "Delhi",
+      type: "Engineering", rating: "NIRF #4",
+      fees: 238000, feesDisplay: "₹2.38L/yr",
+      exam: "JEE Advanced", rank: "NIRF Engineering Rank #4",
+      courses: ["B.Tech CSE", "B.Tech EE", "B.Tech Mech", "B.Tech Civil", "B.Tech Chemical", "B.Tech Textile", "M.Tech AI", "M.Tech VLSI", "MBA", "PhD Engineering", "B.Tech Production"],
+      phone: "+91-11-26591000", email: "ugadmission@admin.iitd.ac.in",
+      website: "https://home.iitd.ac.in",
+      established: "1961", type2: "Government (IIT)", affiliation: "Autonomous – IIT Act 1961",
+      about: "Indian Institute of Technology Delhi is one of India's premier engineering institutions, ranked #4 overall by NIRF 2024. Located in Hauz Khas, New Delhi, IIT Delhi offers world-class education in engineering, science, and management. It has produced distinguished alumni in technology, research, and entrepreneurship globally.",
+      facilities: ["Library", "Hostel", "Sports Complex", "Labs", "Cafeteria", "Wi-Fi Campus", "Medical Centre", "Auditorium"]
+    },
+    {
+      id: 2, name: "AIIMS New Delhi", abbr: "AIIMS",
+      location: "New Delhi, Delhi", state: "Delhi",
+      type: "Medical", rating: "NIRF #1",
+      fees: 1628, feesDisplay: "₹1,628/yr",
+      exam: "NEET", rank: "NIRF Medical Rank #1",
+      courses: ["MBBS", "MD General Medicine", "MD Paediatrics", "MD Radiology", "MS Surgery", "MS Orthopaedics", "B.Sc Nursing", "M.Sc Biochemistry", "M.Sc Microbiology", "PhD Medical", "Diploma Anaesthesia"],
+      phone: "+91-11-26588500", email: "director@aiims.edu",
+      website: "https://www.aiims.edu",
+      established: "1956", type2: "Government (Central)", affiliation: "Autonomous – AIIMS Act 1956",
+      about: "All India Institute of Medical Sciences (AIIMS) New Delhi is India's top medical institution for 4 consecutive years per NIRF 2024. Established by Parliament in 1956, it combines world-class medical education with patient care and research. The annual fee of just ₹1,628 makes it one of the most affordable premier institutions in the world.",
+      facilities: ["Hospital", "Research Labs", "Hostel", "Library", "Cafeteria", "Sports Ground", "Auditorium", "Wi-Fi Campus"]
+    },
+    {
+      id: 3, name: "IIM Ahmedabad", abbr: "IIM",
+      location: "Ahmedabad, Gujarat", state: "Maharashtra",
+      type: "Management", rating: "NIRF #1",
+      fees: 2300000, feesDisplay: "₹23L/yr",
+      exam: "CAT", rank: "NIRF Management Rank #1",
+      courses: ["MBA", "PGP", "Executive MBA", "PhD Management", "PGP-FABM", "MBA Agribusiness", "MBA Finance", "MBA Marketing", "MBA HR", "PGP Public Management"],
+      phone: "+91-79-66324000", email: "pgpchair@iima.ac.in",
+      website: "https://www.iima.ac.in",
+      established: "1961", type2: "Government (IIM)", affiliation: "Autonomous – IIM Act 2017",
+      about: "Indian Institute of Management Ahmedabad is India's #1 business school per NIRF 2024. Known for rigorous case-study based learning, distinguished faculty, and an influential alumni network spanning global corporations, government, and startups.",
+      facilities: ["Library", "Hostel", "Sports Complex", "Auditorium", "Cafeteria", "Wi-Fi Campus", "Case Study Rooms", "Innovation Lab"]
+    },
+    {
+      id: 4, name: "NLU Delhi", abbr: "NLU",
+      location: "New Delhi, Delhi", state: "Delhi",
+      type: "Law", rating: "NIRF #2",
+      fees: 180000, feesDisplay: "₹1.8L/yr",
+      exam: "CLAT", rank: "NIRF Law Rank #2",
+      courses: ["BA LLB", "LLM", "PhD Law", "Masters in Business Law", "PG Diploma Cyber Law", "PG Diploma IPR", "LLM Corporate Law", "LLM Criminal Law"],
+      phone: "+91-11-28034257", email: "info@nludelhi.ac.in",
+      website: "https://nludelhi.ac.in",
+      established: "2008", type2: "Government (NLU)", affiliation: "Autonomous – NLU Delhi Act 2008",
+      about: "National Law University Delhi is ranked #2 in Law by NIRF 2024. It is one of India's premier law schools, producing outstanding legal professionals, judges, and academics who serve in the Supreme Court, High Courts, and top law firms across India.",
+      facilities: ["Moot Court", "Library", "Hostel", "Cafeteria", "Wi-Fi Campus", "Sports Ground", "Research Centre"]
+    },
+    {
+      id: 5, name: "IIT Bombay", abbr: "IIT",
+      location: "Mumbai, Maharashtra", state: "Maharashtra",
+      type: "Engineering", rating: "NIRF #3",
+      fees: 220750, feesDisplay: "₹2.2L/yr",
+      exam: "JEE Advanced", rank: "NIRF Engineering Rank #3",
+      courses: ["B.Tech CSE", "B.Tech Mech", "M.Tech AI", "B.Tech Chemical", "B.Tech Aerospace", "B.Tech EE", "B.Tech Engineering Physics", "M.Tech Data Science", "MBA", "PhD", "B.Tech Civil"],
+      phone: "+91-22-25722545", email: "registrar@iitb.ac.in",
+      website: "https://www.iitb.ac.in",
+      established: "1958", type2: "Government (IIT)", affiliation: "Autonomous – IIT Act 1961",
+      about: "IIT Bombay is ranked #3 in Engineering by NIRF 2024. Located on the scenic Powai campus in Mumbai, it is known for strong industry connections, excellent research output, and a thriving startup culture that has produced several unicorn companies.",
+      facilities: ["Library", "Hostel", "Olympic Pool", "Labs", "Cafeteria", "Wi-Fi Campus", "Auditorium", "Innovation Hub"]
+    },
+    {
+      id: 6, name: "Amity University", abbr: "AMU",
+      location: "Noida, Uttar Pradesh", state: "Uttar Pradesh",
+      type: "Engineering", rating: "NIRF 51-100",
+      fees: 350000, feesDisplay: "₹3.5L/yr",
+      exam: "JEE Main", rank: "NIRF Rank 51-100",
+      courses: ["B.Tech CSE", "B.Tech AI & ML", "BBA", "MBA", "B.Sc Psychology", "LLB", "B.Com", "B.Sc Biotechnology", "B.Tech ECE", "MA Journalism", "B.Des Fashion", "PhD"],
+      phone: "+91-120-4392000", email: "admissions@amity.edu",
+      website: "https://www.amity.edu",
+      established: "2005", type2: "Private (Deemed)", affiliation: "UGC Recognised",
+      about: "Amity University is one of India's largest private universities with campuses across the country. It offers a wide range of undergraduate and postgraduate programs with strong industry tie-ups, modern infrastructure, and dedicated placement support.",
+      facilities: ["Library", "Hostel", "Sports Complex", "Labs", "Cafeteria", "Wi-Fi Campus", "Medical Centre", "Swimming Pool"]
+    },
+    {
+      id: 7, name: "Presidency University", abbr: "PU",
+      location: "Kolkata, West Bengal", state: "West Bengal",
+      type: "Arts", rating: "NIRF Top 50",
+      fees: 12000, feesDisplay: "₹12K/yr",
+      exam: "CUET", rank: "NIRF Colleges Top 50",
+      courses: ["B.Sc Physics", "B.Sc Chemistry", "B.Sc Maths", "B.A. History", "B.A. English", "B.A. Economics", "M.Sc Chemistry", "M.Sc Physics", "M.A. Bengali", "M.A. Political Science", "PhD"],
+      phone: "+91-33-22413893", email: "president@presiuniv.ac.in",
+      website: "https://presiuniv.ac.in",
+      established: "1817", type2: "Government (State)", affiliation: "UGC Recognised",
+      about: "Presidency University Kolkata, established in 1817, is one of India's oldest and most distinguished educational institutions. It has produced Nobel laureates including Amartya Sen, national leaders, and eminent scholars. It consistently ranks in NIRF's top 50 colleges.",
+      facilities: ["Historic Library", "Hostel", "Science Labs", "Cafeteria", "Sports Ground", "Auditorium", "Research Centre"]
+    },
+    {
+      id: 8, name: "BITS Pilani", abbr: "BITS",
+      location: "Pilani, Rajasthan", state: "Rajasthan",
+      type: "Engineering", rating: "NIRF #16",
+      fees: 562050, feesDisplay: "₹5.6L/yr",
+      exam: "BITSAT", rank: "NIRF Engineering Rank #16",
+      courses: ["B.Tech CSE", "B.Tech Mech", "B.Pharma", "M.Tech", "MBA Tech", "B.Tech EEE", "B.Tech Chemical", "B.Tech Civil", "M.Sc Biology", "M.Sc Chemistry", "Integrated M.Sc Physics"],
+      phone: "+91-1596-242192", email: "admissions@pilani.bits-pilani.ac.in",
+      website: "https://www.bits-pilani.ac.in",
+      established: "1964", type2: "Private (Deemed)", affiliation: "Autonomous",
+      about: "BITS Pilani is ranked #16 in Engineering by NIRF 2024. Known for its unique Practice School internship program, strong alumni network in Silicon Valley, and a flexible academic structure. It accepts only BITSAT scores — no JEE required.",
+      facilities: ["Library", "Hostel", "Sports Complex", "Labs", "Cafeteria", "Wi-Fi Campus", "Medical Centre", "Auditorium"]
+    },
+    {
+      id: 9, name: "Kasturba Medical College", abbr: "KMC",
+      location: "Manipal, Karnataka", state: "Karnataka",
+      type: "Medical", rating: "NIRF #27",
+      fees: 1200000, feesDisplay: "₹12L/yr",
+      exam: "NEET", rank: "NIRF Medical Rank #27",
+      courses: ["MBBS", "BDS", "B.Sc Nursing", "MD General Medicine", "MS Surgery", "MD Paediatrics", "MD Radiology", "M.Sc Anatomy", "PG Diploma Clinical Research", "PhD Medical Sciences"],
+      phone: "+91-820-2922000", email: "info@manipal.edu",
+      website: "https://manipal.edu/kmc",
+      established: "1953", type2: "Private (Deemed)", affiliation: "Manipal Academy of Higher Education",
+      about: "Kasturba Medical College is ranked #27 in Medical by NIRF 2024. Part of Manipal Academy, it offers world-class clinical training with modern simulation facilities and internationally recognised degrees. One of India's oldest private medical colleges.",
+      facilities: ["Hospital", "Research Labs", "Hostel", "Library", "Simulation Centre", "Sports Ground", "Cafeteria"]
+    },
+    {
+      id: 10, name: "Anna University", abbr: "AU",
+      location: "Chennai, Tamil Nadu", state: "Tamil Nadu",
+      type: "Engineering", rating: "NIRF #1",
+      fees: 80000, feesDisplay: "₹80K/yr",
+      exam: "JEE Main", rank: "NIRF State Univ Rank #1",
+      courses: ["B.Tech CSE", "B.Tech Civil", "B.Tech Mech", "B.Tech IT", "B.Tech EEE", "B.Tech ECE", "M.E. CSE", "M.E. Structural Engg", "MBA", "M.Sc Information Technology", "PhD"],
+      phone: "+91-44-22357004", email: "registrar@annauniv.edu",
+      website: "https://www.annauniv.edu",
+      established: "1978", type2: "Government (State)", affiliation: "State University – UGC",
+      about: "Anna University is ranked #1 among State Public Universities by NIRF 2024. Located in Chennai, it is one of the largest technical universities in India, affiliating hundreds of engineering colleges across Tamil Nadu.",
+      facilities: ["Library", "Hostel", "Labs", "Sports Ground", "Cafeteria", "Wi-Fi Campus", "Auditorium", "Research Centre"]
+    },
+    {
+      id: 11, name: "Delhi University", abbr: "DU",
+      location: "New Delhi, Delhi", state: "Delhi",
+      type: "Arts", rating: "NIRF #10",
+      fees: 15000, feesDisplay: "₹15K/yr",
+      exam: "CUET", rank: "NIRF University Rank #10",
+      courses: ["B.A. English", "B.A. History", "B.A. Economics", "B.A. Political Science", "B.Com", "B.Com Honours", "B.Sc Maths", "B.Sc Physics", "B.Sc Computer Science", "M.A. History", "LLB", "M.Com", "PhD"],
+      phone: "+91-11-27667853", email: "web@du.ac.in",
+      website: "https://www.du.ac.in",
+      established: "1922", type2: "Government (Central)", affiliation: "Central University – UGC",
+      about: "University of Delhi is ranked #10 among Universities by NIRF 2024. One of India's premier central universities with over 90 colleges and 300,000+ students. Known for diverse academic programs, vibrant campus life, and strong alumni across politics, arts, business, and academia.",
+      facilities: ["Library", "Hostel", "Sports Complex", "Labs", "Cafeteria", "Wi-Fi Campus", "Medical Centre", "Auditorium"]
+    },
+    {
+      id: 12, name: "Jadavpur University", abbr: "JU",
+      location: "Kolkata, West Bengal", state: "West Bengal",
+      type: "Engineering", rating: "NIRF #2",
+      fees: 25000, feesDisplay: "₹25K/yr",
+      exam: "JEE Main", rank: "NIRF State Univ Rank #2",
+      courses: ["B.Tech CSE", "B.Tech EE", "B.Tech Mech", "B.Tech Chemical", "B.Tech Civil", "M.Tech CSE", "M.Tech Power Systems", "B.A. English", "B.A. Comparative Literature", "M.Sc Physics", "PhD"],
+      phone: "+91-33-24146000", email: "registrar@jadavpuruniversity.in",
+      website: "https://jadavpuruniversity.in",
+      established: "1905", type2: "Government (State)", affiliation: "State University – UGC",
+      about: "Jadavpur University is ranked #2 among State Public Universities by NIRF 2024. One of West Bengal's most prestigious institutions, known for excellence in engineering and arts. It has a proud legacy of producing distinguished scientists, engineers, and writers.",
+      facilities: ["Library", "Hostel", "Labs", "Sports Ground", "Cafeteria", "Auditorium", "Research Centre"]
+    },
+    {
+      id: 13, name: "Banaras Hindu University", abbr: "BHU",
+      location: "Varanasi, Uttar Pradesh", state: "Uttar Pradesh",
+      type: "Arts", rating: "NIRF #8",
+      fees: 8000, feesDisplay: "₹8K/yr",
+      exam: "CUET", rank: "NIRF University Rank #8",
+      courses: ["B.A. Sanskrit", "B.Sc Physics", "MBBS", "B.Tech CSE", "LLB", "B.A. Hindi", "B.A. History", "B.Com", "M.A. Philosophy", "M.Sc Botany", "B.Ed", "M.Ed", "PhD"],
+      phone: "+91-542-2307221", email: "registrar@bhu.ac.in",
+      website: "https://www.bhu.ac.in",
+      established: "1916", type2: "Government (Central)", affiliation: "Central University – UGC",
+      about: "Banaras Hindu University is ranked #8 among Universities by NIRF 2024. Founded by Pandit Madan Mohan Malaviya in 1916, it is one of Asia's largest residential universities on a 1,300-acre campus offering courses across arts, science, engineering, medicine, and law.",
+      facilities: ["Library", "Hostel", "Hospital", "Sports Complex", "Labs", "Cafeteria", "Temple", "Auditorium"]
+    },
+    {
+      id: 14, name: "VIT Vellore", abbr: "VIT",
+      location: "Vellore, Tamil Nadu", state: "Tamil Nadu",
+      type: "Engineering", rating: "NIRF #11",
+      fees: 198000, feesDisplay: "₹1.98L/yr",
+      exam: "JEE Main", rank: "NIRF Engineering Rank #11",
+      courses: ["B.Tech CSE", "B.Tech AI & ML", "B.Tech ECE", "B.Tech Mech", "B.Tech Civil", "B.Tech Biotech", "B.Tech Chemical", "MBA", "M.Tech CSE", "M.Tech Nanotechnology", "B.Tech IT", "PhD"],
+      phone: "+91-416-2202020", email: "admissions@vit.ac.in",
+      website: "https://vit.ac.in",
+      established: "1984", type2: "Private (Deemed)", affiliation: "Autonomous",
+      about: "VIT Vellore is ranked #11 in Engineering by NIRF 2024. Known for its tech-focused curriculum, large international student body from 50+ countries, and impressive placement record with top MNCs. Accepts both JEE and its own VITEEE entrance exam.",
+      facilities: ["Library", "Hostel", "Sports Complex", "Labs", "Cafeteria", "Wi-Fi Campus", "Innovation Centre", "Medical Centre"]
+    },
+    {
+      id: 15, name: "SRM Institute of Science", abbr: "SRM",
+      location: "Chennai, Tamil Nadu", state: "Tamil Nadu",
+      type: "Engineering", rating: "NIRF #21",
+      fees: 250000, feesDisplay: "₹2.5L/yr",
+      exam: "JEE Main", rank: "NIRF Engineering Rank #21",
+      courses: ["B.Tech CSE", "B.Tech Biotech", "B.Tech ECE", "B.Tech Mech", "MBA", "B.Sc Nursing", "M.Tech AI", "B.Tech Civil", "BBA", "M.Sc Data Science", "B.Tech IT", "PhD"],
+      phone: "+91-44-27417000", email: "admissions@srmist.edu.in",
+      website: "https://www.srmist.edu.in",
+      established: "1985", type2: "Private (Deemed)", affiliation: "Autonomous",
+      about: "SRM Institute of Science and Technology is ranked #21 in Engineering by NIRF 2024. One of India's top private universities with multiple campuses. Known for strong industry partnerships, modern research facilities, and a vibrant student community.",
+      facilities: ["Library", "Hostel", "Sports Complex", "Labs", "Cafeteria", "Wi-Fi Campus", "Medical Centre", "Auditorium"]
+    },
+    {
+      id: 16, name: "Osmania University", abbr: "OU",
+      location: "Hyderabad, Telangana", state: "Telangana",
+      type: "Arts", rating: "NIRF 51-100",
+      fees: 18000, feesDisplay: "₹18K/yr",
+      exam: "CUET", rank: "NIRF University Rank 51-100",
+      courses: ["B.A. Economics", "B.A. Telugu", "B.A. History", "B.Com", "B.Sc Chemistry", "B.Sc Maths", "LLB", "M.A. Telugu", "M.Sc Organic Chemistry", "M.Com", "B.Ed", "PhD"],
+      phone: "+91-40-27098090", email: "registrar@osmania.ac.in",
+      website: "https://www.osmania.ac.in",
+      established: "1918", type2: "Government (State)", affiliation: "State University – UGC",
+      about: "Osmania University, established in 1918, is one of India's oldest universities and the first to use an Indian language (Urdu) as its medium of instruction. Located in Hyderabad, it has a beautiful heritage campus and has produced distinguished alumni in public life.",
+      facilities: ["Historic Library", "Hostel", "Labs", "Sports Ground", "Cafeteria", "Auditorium", "Museum"]
+    },
+    {
+      id: 17, name: "Hyderabad Central University", abbr: "HCU",
+      location: "Hyderabad, Telangana", state: "Telangana",
+      type: "Arts", rating: "NIRF #14",
+      fees: 12000, feesDisplay: "₹12K/yr",
+      exam: "CUET", rank: "NIRF University Rank #14",
+      courses: ["M.A. English", "M.A. Hindi", "M.Sc Physics", "M.Sc Chemistry", "MBA", "M.Tech CSE", "M.A. Linguistics", "M.Sc Mathematics", "M.A. History", "M.A. Economics", "PhD", "PG Diploma Journalism"],
+      phone: "+91-40-23133000", email: "registrar@uohyd.ac.in",
+      website: "https://uohyd.ac.in",
+      established: "1974", type2: "Government (Central)", affiliation: "Central University – UGC",
+      about: "University of Hyderabad is ranked #14 among Universities by NIRF 2024. A premier central university known for research excellence, particularly in sciences, humanities, and social sciences. A top destination for postgraduate studies in South India.",
+      facilities: ["Library", "Hostel", "Research Labs", "Sports Complex", "Cafeteria", "Wi-Fi Campus", "Health Centre"]
+    },
+    {
+      id: 18, name: "NIT Trichy", abbr: "NIT",
+      location: "Tiruchirappalli, Tamil Nadu", state: "Tamil Nadu",
+      type: "Engineering", rating: "NIRF #8",
+      fees: 154200, feesDisplay: "₹1.54L/yr",
+      exam: "JEE Main", rank: "NIRF Engineering Rank #8",
+      courses: ["B.Tech CSE", "B.Tech Mech", "B.Tech Civil", "B.Tech EEE", "B.Tech ECE", "B.Tech Production Engg", "B.Tech Metallurgy", "M.Tech CSE", "M.Tech Structural Engg", "M.Tech Energy Engg", "MBA", "PhD"],
+      phone: "+91-431-2503000", email: "admissions@nitt.edu",
+      website: "https://www.nitt.edu",
+      established: "1964", type2: "Government (NIT)", affiliation: "Autonomous – NIT Act 2007",
+      about: "NIT Trichy is ranked #8 in Engineering by NIRF 2024 and is consistently India's top National Institute of Technology. Known for academic rigour, excellent faculty, strong placement record, and a beautiful campus along the Cauvery river in Tamil Nadu.",
+      facilities: ["Library", "Hostel", "Sports Complex", "Labs", "Cafeteria", "Wi-Fi Campus", "Medical Centre", "Auditorium"]
+    },
+    {
+      id: 19, name: "Symbiosis International University", abbr: "SIU",
+      location: "Pune, Maharashtra", state: "Maharashtra",
+      type: "Management", rating: "NIRF #21",
+      fees: 600000, feesDisplay: "₹6L/yr",
+      exam: "CAT", rank: "NIRF Management Rank #21",
+      courses: ["MBA", "BBA", "LLB", "B.Sc IT", "M.Sc Data Science", "BA Mass Communication", "B.Com", "MBA HR", "MBA Finance", "MBA Marketing", "M.Sc Biotechnology", "PG Diploma Cyber Security"],
+      phone: "+91-20-28116226", email: "siu@siu.edu.in",
+      website: "https://www.siu.edu.in",
+      established: "2002", type2: "Private (Deemed)", affiliation: "Autonomous",
+      about: "Symbiosis International University is ranked #21 in Management by NIRF 2024. One of India's top private universities with a strong international focus, hosting students from 80+ countries. Known for management, law, and technology programs.",
+      facilities: ["Library", "Hostel", "Sports Complex", "Labs", "Cafeteria", "Wi-Fi Campus", "International Centre", "Medical Centre"]
+    },
+    {
+      id: 20, name: "Jamia Millia Islamia", abbr: "JMI",
+      location: "New Delhi, Delhi", state: "Delhi",
+      type: "Engineering", rating: "NIRF #3",
+      fees: 30000, feesDisplay: "₹30K/yr",
+      exam: "JEE Main", rank: "NIRF University Rank #3",
+      courses: ["B.Tech CSE", "B.Tech ECE", "B.A. Mass Comm", "LLB", "B.Ed", "MBA", "B.A. Fine Arts", "B.A. Arabic", "M.A. Urdu", "B.Sc Computer Science", "M.Tech CSE", "PhD"],
+      phone: "+91-11-26981717", email: "info@jmi.ac.in",
+      website: "https://www.jmi.ac.in",
+      established: "1920", type2: "Government (Central)", affiliation: "Central University – UGC",
+      about: "Jamia Millia Islamia is ranked #3 among Universities by NIRF 2024. A central university in New Delhi with roots in India's freedom movement, founded by visionaries including Mahatma Gandhi and Maulana Mohammad Ali Jouhar in 1920.",
+      facilities: ["Library", "Hostel", "Sports Ground", "Labs", "Cafeteria", "Wi-Fi Campus", "Museum", "Health Centre"]
+    },
+    {
+      id: 21, name: "Calcutta Medical College", abbr: "CMC",
+      location: "Kolkata, West Bengal", state: "West Bengal",
+      type: "Medical", rating: "NIRF #15",
+      fees: 50000, feesDisplay: "₹50K/yr",
+      exam: "NEET", rank: "NIRF Medical Rank #15",
+      courses: ["MBBS", "MD General Medicine", "MD Paediatrics", "MS Surgery", "MS Orthopaedics", "B.Sc Nursing", "Diploma Nursing", "MD Psychiatry", "MS Ophthalmology", "MD Dermatology", "PhD Medical"],
+      phone: "+91-33-22551948", email: "principal@cmckolkata.in",
+      website: "https://www.cmckolkata.in",
+      established: "1835", type2: "Government (State)", affiliation: "West Bengal University of Health Sciences",
+      about: "Calcutta Medical College, established in 1835, is one of Asia's oldest medical institutions and ranked #15 in Medical by NIRF 2024. A premier government medical college with a large hospital, strong clinical training, and a rich heritage of medical education.",
+      facilities: ["Hospital", "Research Labs", "Hostel", "Library", "Anatomy Museum", "Sports Ground", "Cafeteria"]
+    },
+    {
+      id: 22, name: "Nalsar University of Law", abbr: "NALSAR",
+      location: "Hyderabad, Telangana", state: "Telangana",
+      type: "Law", rating: "NIRF #3",
+      fees: 160000, feesDisplay: "₹1.6L/yr",
+      exam: "CLAT", rank: "NIRF Law Rank #3",
+      courses: ["BA LLB", "LLM", "MBA Law", "PhD Law", "PG Diploma Cyber Law", "PG Diploma ADR", "LLM IPR", "LLM Constitutional Law", "LLM International Law"],
+      phone: "+91-40-23498104", email: "admissions@nalsar.ac.in",
+      website: "https://nalsar.ac.in",
+      established: "1998", type2: "Government (NLU)", affiliation: "Autonomous – AP Act 1998",
+      about: "NALSAR University of Law is ranked #3 in Law by NIRF 2024. Located in Hyderabad, it is one of India's top national law schools known for academic excellence, distinguished moot court teams, and highly successful alumni in law, policy, and judiciary.",
+      facilities: ["Moot Court", "Library", "Hostel", "Cafeteria", "Wi-Fi Campus", "Sports Ground", "Legal Aid Centre"]
+    },
+    {
+      id: 23, name: "IIT Madras", abbr: "IIT",
+      location: "Chennai, Tamil Nadu", state: "Tamil Nadu",
+      type: "Engineering", rating: "NIRF #1",
+      fees: 234750, feesDisplay: "₹2.35L/yr",
+      exam: "JEE Advanced", rank: "NIRF Engineering Rank #1",
+      courses: ["B.Tech CSE", "B.Tech Aerospace", "B.Tech Ocean Engg", "B.Tech Mech", "B.Tech EE", "B.Tech Chemical", "M.Tech Data Science", "M.Tech AI", "MBA", "PhD", "B.Tech Engineering Design"],
+      phone: "+91-44-22574000", email: "registrar@iitm.ac.in",
+      website: "https://www.iitm.ac.in",
+      established: "1959", type2: "Government (IIT)", affiliation: "Autonomous – IIT Act 1961",
+      about: "IIT Madras is ranked #1 in Engineering by NIRF 2024 for 6 consecutive years, and #1 Overall in India. Located in a lush forested campus in Chennai, it is known for cutting-edge research, a thriving startup ecosystem with IIT Madras Research Park, and global academic collaborations.",
+      facilities: ["Library", "Hostel", "Research Park", "Sports Complex", "Cafeteria", "Wi-Fi Campus", "Medical Centre", "Innovation Hub"]
+    },
+    {
+      id: 24, name: "Christ University", abbr: "CU",
+      location: "Bengaluru, Karnataka", state: "Karnataka",
+      type: "Management", rating: "NIRF 51-100",
+      fees: 180000, feesDisplay: "₹1.8L/yr",
+      exam: "CAT", rank: "NIRF Rank 51-100",
+      courses: ["BBA", "MBA", "B.Com", "BA Economics", "B.Sc Psychology", "BA Journalism", "B.Sc Computer Science", "B.Sc Statistics", "MA English", "M.Com", "MBA Finance", "MBA HR", "PhD"],
+      phone: "+91-80-40129100", email: "admissions@christuniversity.in",
+      website: "https://christuniversity.in",
+      established: "1969", type2: "Private (Deemed)", affiliation: "Autonomous",
+      about: "Christ University Bengaluru is a leading private deemed university known for holistic education that combines academics with personality development, sports, and social responsibility. Strong programs in commerce, management, and humanities.",
+      facilities: ["Library", "Hostel", "Sports Complex", "Labs", "Cafeteria", "Wi-Fi Campus", "Chapel", "Innovation Centre"]
+    },
+    {
+      id: 25, name: "Manipal Institute of Technology", abbr: "MIT",
+      location: "Manipal, Karnataka", state: "Karnataka",
+      type: "Engineering", rating: "NIRF #41",
+      fees: 420000, feesDisplay: "₹4.2L/yr",
+      exam: "JEE Main", rank: "NIRF Engineering Rank #41",
+      courses: ["B.Tech CSE", "B.Tech AI", "B.Tech Robotics", "B.Tech Mechatronics", "B.Tech ECE", "B.Tech Civil", "B.Tech Mech", "M.Tech CSE", "M.Tech Embedded Systems", "B.Tech Chemical", "MBA Tech", "PhD"],
+      phone: "+91-820-2923000", email: "admissions@manipal.edu",
+      website: "https://manipal.edu/mit",
+      established: "1957", type2: "Private (Deemed)", affiliation: "Manipal Academy of Higher Education",
+      about: "Manipal Institute of Technology is ranked #41 in Engineering by NIRF 2024. Part of the Manipal Academy, it offers futuristic programs in AI, Robotics, and emerging technologies. One of India's oldest private engineering colleges with strong global industry connections.",
+      facilities: ["Library", "Hostel", "Sports Complex", "Robotics Lab", "Cafeteria", "Wi-Fi Campus", "Medical Centre", "Innovation Studio"]
+    }
+  ];
+ 
+  // ── FACILITY ICONS MAP ──
+  const facilityIcons = {
+    "Library": "📚", "Hostel": "🏠", "Sports Complex": "⚽", "Labs": "🔬",
+    "Cafeteria": "🍽️", "Wi-Fi Campus": "📶", "Medical Centre": "🏥",
+    "Auditorium": "🎭", "Hospital": "🏨", "Research Labs": "🧪",
+    "Research Centre": "🔭", "Innovation Hub": "💡", "Innovation Centre": "💡",
+    "Innovation Studio": "💡", "Research Park": "🏗️", "Swimming Pool": "🏊",
+    "Olympic Pool": "🏊", "Moot Court": "⚖️", "Legal Aid Centre": "📜",
+    "Health Centre": "💊", "International Centre": "🌍", "Museum": "🏛️",
+    "Historic Library": "📖", "Science Labs": "⚗️", "Temple": "🛕",
+    "Sports Ground": "🏃", "Case Study Rooms": "💼", "Anatomy Museum": "🩺",
+    "Simulation Centre": "🖥️", "Chapel": "⛪", "Robotics Lab": "🤖"
+  };
+ 
+  // ── READ COLLEGE ID FROM URL ──
+  // Usage: college.html?id=1
+  const params = new URLSearchParams(window.location.search);
+  const collegeId = parseInt(params.get('id')) || 1;
+  const c = colleges.find(col => col.id === collegeId);
+ 
+  const container = document.getElementById('page-content');
+ 
+  if (!c) {
+    container.innerHTML = `<div class="not-found"><div style="font-size:48px">🔍</div><p style="margin-top:12px">College not found.</p><a href="index.html" style="color:#1A56DB">← Go back</a></div>`;
+  } else {
+    // ── BUILD COURSES ROWS ──
+    const courseRows = c.courses.map(course => `
+      <tr>
+        <td><span class="course-badge">${course}</span></td>
+        <td>${c.type}</td>
+        <td>${c.feesDisplay}</td>
+        <td>${c.exam}</td>
+      </tr>`).join('');
+ 
+    // ── BUILD FACILITIES ──
+    const facilityItems = c.facilities.map(f => `
+      <div class="facility-item">
+        <div class="facility-icon">${facilityIcons[f] || '🏫'}</div>
+        <div class="facility-name">${f}</div>
+      </div>`).join('');
+ 
+    // ── INJECT HTML ──
+    container.innerHTML = `
+      <!-- HERO -->
+      <div class="college-hero">
+        <div class="hero-inner">
+          <div class="college-logo-big">${c.abbr}</div>
+          <div class="hero-text">
+            <h1>${c.name}</h1>
+            <div class="hero-location">📍 ${c.location}</div>
+            <div class="hero-badges">
+              <span class="hbadge-gold hbadge">⭐ ${c.rating} Rating</span>
+              <span class="hbadge">${c.type}</span>
+              <span class="hbadge">${c.rank}</span>
+              <span class="hbadge">Est. ${c.established}</span>
+              <span class="hbadge">${c.type2}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- QUICK STATS -->
+      <div class="quick-stats">
+        <div class="qs-inner">
+          <div class="qs-item"><div class="qs-val">${c.feesDisplay}</div><div class="qs-label">Annual Fees</div></div>
+          <div class="qs-item"><div class="qs-val">${c.exam}</div><div class="qs-label">Entrance Exam</div></div>
+          <div class="qs-item"><div class="qs-val">${c.courses.length}</div><div class="qs-label">Courses Offered</div></div>
+          <div class="qs-item"><div class="qs-val">${c.established}</div><div class="qs-label">Established</div></div>
+          <div class="qs-item"><div class="qs-val">⭐ ${c.rating}</div><div class="qs-label">Overall Rating</div></div>
+        </div>
+      </div>
+ 
+      <!-- MAIN CONTENT -->
+      <div class="main-wrap">
+ 
+        <!-- LEFT COLUMN -->
+        <div>
+ 
+          <!-- ABOUT -->
+          <div class="card">
+            <div class="card-heading">📋 About ${c.name}</div>
+            <p class="about-text">${c.about}</p>
+          </div>
+ 
+          <!-- COURSES -->
+          <div class="card">
+            <div class="card-heading">🎓 Courses Offered</div>
+            <table class="courses-table">
+              <thead>
+                <tr>
+                  <th>Course Name</th>
+                  <th>Stream</th>
+                  <th>Fees</th>
+                  <th>Entrance Exam</th>
+                </tr>
+              </thead>
+              <tbody>${courseRows}</tbody>
+            </table>
+          </div>
+ 
+          <!-- FACILITIES -->
+          <div class="card">
+            <div class="card-heading">🏫 Campus Facilities</div>
+            <div class="facilities-grid">${facilityItems}</div>
+          </div>
+ 
+        </div>
+ 
+        <!-- RIGHT SIDEBAR -->
+        <div>
+ 
+          <!-- CONTACT -->
+          <div class="contact-card">
+            <div class="contact-heading">📞 Contact Details</div>
+            <div class="contact-row">
+              <div class="contact-icon">📞</div>
+              <div><div class="contact-label">Phone</div><div class="contact-val">${c.phone}</div></div>
+            </div>
+            <div class="contact-row">
+              <div class="contact-icon">✉️</div>
+              <div><div class="contact-label">Email</div><div class="contact-val"><a href="mailto:${c.email}">${c.email}</a></div></div>
+            </div>
+            <div class="contact-row">
+              <div class="contact-icon">🌐</div>
+              <div><div class="contact-label">Website</div><div class="contact-val"><a href="${c.website}" target="_blank">${c.website.replace('https://','')}</a></div></div>
+            </div>
+            <div class="contact-row">
+              <div class="contact-icon">📍</div>
+              <div><div class="contact-label">Address</div><div class="contact-val">${c.location}</div></div>
+            </div>
+            <a class="apply-btn" href="mailto:${c.email}">Apply / Enquire Now</a>
+            <button class="save-btn" onclick="saveCollege(${c.id})">🔖 Save College</button>
+          </div>
+ 
+          <!-- KEY FACTS -->
+          <div class="contact-card">
+            <div class="contact-heading">📊 Key Facts</div>
+            <ul class="facts-list">
+              <li><span class="fact-key">Type</span><span class="fact-val">${c.type2}</span></li>
+              <li><span class="fact-key">Affiliation</span><span class="fact-val">${c.affiliation}</span></li>
+              <li><span class="fact-key">Established</span><span class="fact-val">${c.established}</span></li>
+              <li><span class="fact-key">Entrance Exam</span><span class="fact-val">${c.exam}</span></li>
+              <li><span class="fact-key">State</span><span class="fact-val">${c.state}</span></li>
+              <li><span class="fact-key">Annual Fees</span><span class="fact-val">${c.feesDisplay}</span></li>
+              <li><span class="fact-key">Rating</span><span class="fact-val">⭐ ${c.rating} / 5</span></li>
+            </ul>
+          </div>
+ 
+        </div>
+      </div>`;
+  }
+ 
+  // ── SAVE COLLEGE using localStorage ──
+  function saveCollege(id) {
+    let saved = JSON.parse(localStorage.getItem('savedColleges') || '[]');
+    if (!saved.includes(id)) {
+      saved.push(id);
+      localStorage.setItem('savedColleges', JSON.stringify(saved));
+      alert('✅ College saved! You can view saved colleges later.');
+    } else {
+      alert('ℹ️ This college is already saved.');
+    }
+  }
+</script>
+</body>
+</html>
+ 

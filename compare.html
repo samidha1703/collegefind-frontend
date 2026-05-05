@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Compare Colleges – CollegeFind India</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; color: #0B1E3D; background: #F8F9FC; overflow-x: hidden; }
+ 
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid #EEF1F8; padding: 0 5%;
+      display: flex; align-items: center; justify-content: space-between; height: 64px;
+    }
+    .logo { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 20px; color: #0B1E3D; text-decoration: none; }
+    .logo span { color: #1A56DB; }
+    .back-btn {
+      background: #EEF1F8; color: #0B1E3D; border: none; padding: 8px 18px;
+      border-radius: 8px; font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; text-decoration: none; transition: background 0.2s;
+    }
+    .back-btn:hover { background: #dde3f0; }
+ 
+    .page-header {
+      background: linear-gradient(135deg, #0B1E3D 0%, #1A3A6E 60%, #1A56DB 100%);
+      padding: 40px 5% 36px; text-align: center; position: relative; overflow: hidden;
+    }
+    .page-header::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 70% 50%, rgba(255,107,53,0.12) 0%, transparent 60%);
+    }
+    .page-header h1 { font-family: 'Sora', sans-serif; font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; color: #fff; margin-bottom: 8px; position: relative; }
+    .page-header p { font-size: 15px; color: rgba(255,255,255,0.7); position: relative; }
+ 
+    .main-wrap { max-width: 1100px; margin: 32px auto; padding: 0 5%; }
+ 
+    .selector-section { background: #fff; border: 1px solid #EEF1F8; border-radius: 16px; padding: 24px; margin-bottom: 28px; }
+    .selector-title { font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 600; color: #0B1E3D; margin-bottom: 16px; }
+    .selector-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+ 
+    .selector-slot { border: 2px dashed #EEF1F8; border-radius: 12px; padding: 16px; text-align: center; position: relative; transition: border-color 0.2s; }
+    .selector-slot.filled { border: 2px solid #1A56DB; }
+    .slot-label { font-size: 11px; font-weight: 600; color: #9AA3B5; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+    .slot-select { width: 100%; border: 1.5px solid #EEF1F8; background: #F8F9FC; color: #0B1E3D; font-size: 13px; font-family: 'DM Sans', sans-serif; padding: 9px 12px; border-radius: 8px; cursor: pointer; outline: none; }
+    .slot-select:focus { border-color: #1A56DB; }
+    .slot-selected-name { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 600; color: #1A56DB; margin-top: 8px; display: none; }
+    .slot-clear { position: absolute; top: 10px; right: 10px; background: #EEF1F8; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; display: none; align-items: center; justify-content: center; color: #9AA3B5; }
+    .slot-clear:hover { background: #FFE0E0; color: #E53E3E; }
+ 
+    .btn-row { margin-top: 18px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .compare-btn { padding: 12px 32px; background: #1A56DB; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.2s; }
+    .compare-btn:hover { background: #1347c0; }
+    .compare-btn:disabled { background: #9AA3B5; cursor: not-allowed; }
+    .hint-text { font-size: 13px; color: #9AA3B5; }
+ 
+    .reset-btn { background: #fff; color: #1A56DB; border: 1.5px solid #1A56DB; padding: 10px 24px; border-radius: 10px; font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.2s; margin-bottom: 20px; }
+    .reset-btn:hover { background: #E8F0FE; }
+ 
+    .compare-section { display: none; }
+    .compare-section.show { display: block; }
+ 
+    /* VERDICT */
+    .verdict-section { background: #fff; border: 1px solid #EEF1F8; border-radius: 16px; padding: 24px; margin-bottom: 24px; }
+    .verdict-title { font-family: 'Sora', sans-serif; font-size: 16px; font-weight: 600; color: #0B1E3D; margin-bottom: 16px; }
+    .verdict-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+    .verdict-card { border: 1.5px solid #EEF1F8; border-radius: 12px; padding: 14px; text-align: center; }
+    .verdict-label { font-size: 11px; color: #9AA3B5; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .verdict-winner { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; color: #0B1E3D; margin-bottom: 4px; }
+    .verdict-badge { display: inline-block; background: #F5A623; color: #0B1E3D; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+ 
+    /* TABLE */
+    .compare-table-wrap { background: #fff; border: 1px solid #EEF1F8; border-radius: 16px; overflow: hidden; overflow-x: auto; margin-bottom: 24px; }
+    .compare-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    .compare-table .header-row { background: linear-gradient(135deg, #0B1E3D, #1A56DB); }
+    .compare-table .header-row th { padding: 20px 16px; text-align: center; font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 600; color: #fff; border-right: 1px solid rgba(255,255,255,0.1); }
+    .compare-table .header-row th:first-child { text-align: left; width: 160px; background: rgba(0,0,0,0.2); font-size: 12px; }
+    .compare-table .header-row th:last-child { border-right: none; }
+    .col-abbr { width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; margin: 0 auto 6px; }
+    .col-rank { display: inline-block; background: #F5A623; color: #0B1E3D; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 99px; margin-top: 4px; }
+ 
+    .compare-table .cat-row td { background: #F8F9FC; padding: 9px 16px; font-size: 11px; font-weight: 700; color: #9AA3B5; letter-spacing: 1px; text-transform: uppercase; border-top: 1px solid #EEF1F8; }
+    .compare-table .data-row td { padding: 13px 16px; font-size: 13px; color: #0B1E3D; border-top: 1px solid #EEF1F8; border-right: 1px solid #EEF1F8; text-align: center; vertical-align: middle; }
+    .compare-table .data-row td:first-child { text-align: left; font-weight: 500; color: #3D4560; background: #FAFBFD; font-size: 13px; }
+    .compare-table .data-row td:last-child { border-right: none; }
+    .compare-table .data-row:hover td { background: #F0F4FF; }
+    .compare-table .data-row:hover td:first-child { background: #E8EFFE; }
+ 
+    .best-cell { background: #E8F8EF !important; }
+    .best { color: #1A7A45 !important; font-weight: 700 !important; }
+    .worst { color: #C05010 !important; }
+ 
+    .cell-tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 99px; margin: 2px; }
+    .tag-blue { background: #E8F0FE; color: #1A56DB; }
+    .tag-green { background: #E8F8EF; color: #1A7A45; }
+    .tag-orange { background: #FFF0E8; color: #C05010; }
+  </style>
+</head>
+<body>
+ 
+<nav>
+  <a class="logo" href="file.html">College<span>Find</span></a>
+  <a class="back-btn" href="file.html">← Back to Search</a>
+</nav>
+ 
+<div class="page-header">
+  <h1>⚖️ Compare Colleges</h1>
+  <p>Select up to 3 colleges and compare them side by side</p>
+</div>
+ 
+<div class="main-wrap">
+ 
+  <div class="selector-section">
+    <div class="selector-title">📋 Select Colleges to Compare (min 2, max 3)</div>
+    <div class="selector-grid">
+      <div class="selector-slot" id="slot0">
+        <div class="slot-label">College 1</div>
+        <select class="slot-select" id="select0" onchange="selectCollege(0, this.value)">
+          <option value="">-- Select a College --</option>
+        </select>
+        <div class="slot-selected-name" id="name0"></div>
+        <button class="slot-clear" id="clear0" onclick="clearSlot(0)">✕</button>
+      </div>
+      <div class="selector-slot" id="slot1">
+        <div class="slot-label">College 2</div>
+        <select class="slot-select" id="select1" onchange="selectCollege(1, this.value)">
+          <option value="">-- Select a College --</option>
+        </select>
+        <div class="slot-selected-name" id="name1"></div>
+        <button class="slot-clear" id="clear1" onclick="clearSlot(1)">✕</button>
+      </div>
+      <div class="selector-slot" id="slot2">
+        <div class="slot-label">College 3 (Optional)</div>
+        <select class="slot-select" id="select2" onchange="selectCollege(2, this.value)">
+          <option value="">-- Select a College --</option>
+        </select>
+        <div class="slot-selected-name" id="name2"></div>
+        <button class="slot-clear" id="clear2" onclick="clearSlot(2)">✕</button>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="compare-btn" id="compareBtn" onclick="buildComparison()" disabled>⚖️ Compare Now</button>
+      <span class="hint-text" id="hintText">Select at least 2 colleges to compare</span>
+    </div>
+  </div>
+ 
+  <div id="resetWrap" style="display:none">
+    <button class="reset-btn" onclick="resetAll()">↺ Start New Comparison</button>
+  </div>
+ 
+  <div class="compare-section" id="compareSection">
+    <div class="verdict-section">
+      <div class="verdict-title">🏆 Quick Verdict</div>
+      <div class="verdict-grid" id="verdictGrid"></div>
+    </div>
+    <div class="compare-table-wrap">
+      <table class="compare-table" id="compareTable"></table>
+    </div>
+  </div>
+ 
+</div>
+ 
+<script>
+  const colleges = [
+    { id:1, name:"IIT Delhi", abbr:"IIT-D", location:"New Delhi, Delhi", state:"Delhi", type:"Engineering", fees:238000, feesDisplay:"₹2.38L/yr", exam:"JEE Advanced", rank:"NIRF Engg #4", established:"1961", type2:"Government", affiliation:"Autonomous – IIT Act", courses:["B.Tech CSE","B.Tech EE","B.Tech Mech","B.Tech Civil","B.Tech Chemical","M.Tech AI","M.Tech VLSI","MBA","PhD"], facilities:["Library","Hostel","Sports Complex","Labs","Cafeteria","Wi-Fi","Medical Centre","Auditorium"], phone:"+91-11-26591000", email:"ugadmission@admin.iitd.ac.in", website:"home.iitd.ac.in" },
+    { id:2, name:"AIIMS New Delhi", abbr:"AIIMS", location:"New Delhi, Delhi", state:"Delhi", type:"Medical", fees:1628, feesDisplay:"₹1,628/yr", exam:"NEET", rank:"NIRF Medical #1", established:"1956", type2:"Government", affiliation:"Autonomous – AIIMS Act", courses:["MBBS","MD General Medicine","MS Surgery","B.Sc Nursing","M.Sc Biochemistry","PhD Medical"], facilities:["Hospital","Research Labs","Hostel","Library","Cafeteria","Sports Ground"], phone:"+91-11-26588500", email:"director@aiims.edu", website:"aiims.edu" },
+    { id:3, name:"IIM Ahmedabad", abbr:"IIM-A", location:"Ahmedabad, Gujarat", state:"Gujarat", type:"Management", fees:2300000, feesDisplay:"₹23L/yr", exam:"CAT", rank:"NIRF Mgmt #1", established:"1961", type2:"Government", affiliation:"Autonomous – IIM Act", courses:["MBA","PGP","Executive MBA","PhD Management","MBA Finance","MBA Marketing"], facilities:["Library","Hostel","Sports Complex","Auditorium","Cafeteria","Wi-Fi"], phone:"+91-79-66324000", email:"pgpchair@iima.ac.in", website:"iima.ac.in" },
+    { id:4, name:"NLU Delhi", abbr:"NLU-D", location:"New Delhi, Delhi", state:"Delhi", type:"Law", fees:180000, feesDisplay:"₹1.8L/yr", exam:"CLAT", rank:"NIRF Law #2", established:"2008", type2:"Government", affiliation:"Autonomous – NLU Act", courses:["BA LLB","LLM","PhD Law","Masters Business Law","PG Diploma Cyber Law"], facilities:["Moot Court","Library","Hostel","Cafeteria","Wi-Fi","Sports Ground"], phone:"+91-11-28034257", email:"info@nludelhi.ac.in", website:"nludelhi.ac.in" },
+    { id:5, name:"IIT Bombay", abbr:"IIT-B", location:"Mumbai, Maharashtra", state:"Maharashtra", type:"Engineering", fees:220750, feesDisplay:"₹2.2L/yr", exam:"JEE Advanced", rank:"NIRF Engg #3", established:"1958", type2:"Government", affiliation:"Autonomous – IIT Act", courses:["B.Tech CSE","B.Tech Mech","M.Tech AI","B.Tech Chemical","B.Tech Aerospace","MBA","PhD"], facilities:["Library","Hostel","Olympic Pool","Labs","Cafeteria","Wi-Fi","Auditorium"], phone:"+91-22-25722545", email:"registrar@iitb.ac.in", website:"iitb.ac.in" },
+    { id:6, name:"Amity University", abbr:"AMU", location:"Noida, Uttar Pradesh", state:"Uttar Pradesh", type:"Engineering", fees:350000, feesDisplay:"₹3.5L/yr", exam:"JEE Main", rank:"NIRF Rank 51-100", established:"2005", type2:"Private", affiliation:"UGC Recognised", courses:["B.Tech CSE","B.Tech AI & ML","BBA","MBA","B.Sc Biotechnology","B.Tech ECE"], facilities:["Library","Hostel","Sports Complex","Labs","Cafeteria","Wi-Fi","Swimming Pool"], phone:"+91-120-4392000", email:"admissions@amity.edu", website:"amity.edu" },
+    { id:7, name:"Presidency University", abbr:"PU", location:"Kolkata, West Bengal", state:"West Bengal", type:"Arts", fees:12000, feesDisplay:"₹12K/yr", exam:"CUET", rank:"NIRF Colleges Top 50", established:"1817", type2:"Government", affiliation:"UGC Recognised", courses:["B.Sc Physics","B.Sc Chemistry","B.A. History","B.A. English","M.Sc Chemistry","PhD"], facilities:["Historic Library","Hostel","Science Labs","Cafeteria","Sports Ground","Auditorium"], phone:"+91-33-22413893", email:"president@presiuniv.ac.in", website:"presiuniv.ac.in" },
+    { id:8, name:"BITS Pilani", abbr:"BITS", location:"Pilani, Rajasthan", state:"Rajasthan", type:"Engineering", fees:562050, feesDisplay:"₹5.6L/yr", exam:"BITSAT", rank:"NIRF Engg #16", established:"1964", type2:"Private (Deemed)", affiliation:"Autonomous", courses:["B.Tech CSE","B.Tech Mech","B.Pharma","M.Tech","B.Tech EEE","M.Sc Chemistry"], facilities:["Library","Hostel","Sports Complex","Labs","Cafeteria","Wi-Fi","Medical Centre"], phone:"+91-1596-242192", email:"admissions@pilani.bits-pilani.ac.in", website:"bits-pilani.ac.in" },
+    { id:9, name:"Kasturba Medical College", abbr:"KMC", location:"Manipal, Karnataka", state:"Karnataka", type:"Medical", fees:1200000, feesDisplay:"₹12L/yr", exam:"NEET", rank:"NIRF Medical #27", established:"1953", type2:"Private (Deemed)", affiliation:"Manipal Academy", courses:["MBBS","BDS","B.Sc Nursing","MD General Medicine","MS Surgery","PhD Medical"], facilities:["Hospital","Research Labs","Hostel","Library","Simulation Centre","Sports Ground"], phone:"+91-820-2922000", email:"info@manipal.edu", website:"manipal.edu/kmc" },
+    { id:10, name:"Anna University", abbr:"AU", location:"Chennai, Tamil Nadu", state:"Tamil Nadu", type:"Engineering", fees:80000, feesDisplay:"₹80K/yr", exam:"JEE Main", rank:"NIRF State Univ #1", established:"1978", type2:"Government", affiliation:"State University", courses:["B.Tech CSE","B.Tech Civil","B.Tech Mech","B.Tech IT","M.E. CSE","MBA","PhD"], facilities:["Library","Hostel","Labs","Sports Ground","Cafeteria","Wi-Fi","Auditorium"], phone:"+91-44-22357004", email:"registrar@annauniv.edu", website:"annauniv.edu" },
+    { id:11, name:"Delhi University", abbr:"DU", location:"New Delhi, Delhi", state:"Delhi", type:"Arts", fees:15000, feesDisplay:"₹15K/yr", exam:"CUET", rank:"NIRF University #10", established:"1922", type2:"Government", affiliation:"Central University", courses:["B.A. English","B.A. Economics","B.Com","B.Sc Maths","LLB","M.Com","PhD"], facilities:["Library","Hostel","Sports Complex","Labs","Cafeteria","Wi-Fi","Medical Centre"], phone:"+91-11-27667853", email:"web@du.ac.in", website:"du.ac.in" },
+    { id:12, name:"Jadavpur University", abbr:"JU", location:"Kolkata, West Bengal", state:"West Bengal", type:"Engineering", fees:25000, feesDisplay:"₹25K/yr", exam:"JEE Main", rank:"NIRF State Univ #2", established:"1905", type2:"Government", affiliation:"State University", courses:["B.Tech CSE","B.Tech EE","B.Tech Mech","M.Tech CSE","B.A. English","PhD"], facilities:["Library","Hostel","Labs","Sports Ground","Cafeteria","Auditorium"], phone:"+91-33-24146000", email:"registrar@jadavpuruniversity.in", website:"jadavpuruniversity.in" },
+    { id:13, name:"Banaras Hindu University", abbr:"BHU", location:"Varanasi, Uttar Pradesh", state:"Uttar Pradesh", type:"Arts", fees:8000, feesDisplay:"₹8K/yr", exam:"CUET", rank:"NIRF University #8", established:"1916", type2:"Government", affiliation:"Central University", courses:["B.A. Sanskrit","B.Sc Physics","MBBS","B.Tech CSE","LLB","B.Ed","PhD"], facilities:["Library","Hostel","Hospital","Sports Complex","Labs","Cafeteria","Temple"], phone:"+91-542-2307221", email:"registrar@bhu.ac.in", website:"bhu.ac.in" },
+    { id:14, name:"VIT Vellore", abbr:"VIT", location:"Vellore, Tamil Nadu", state:"Tamil Nadu", type:"Engineering", fees:198000, feesDisplay:"₹1.98L/yr", exam:"JEE Main", rank:"NIRF Engg #11", established:"1984", type2:"Private (Deemed)", affiliation:"Autonomous", courses:["B.Tech CSE","B.Tech AI & ML","B.Tech ECE","B.Tech Mech","MBA","M.Tech CSE","PhD"], facilities:["Library","Hostel","Sports Complex","Labs","Cafeteria","Wi-Fi","Innovation Centre"], phone:"+91-416-2202020", email:"admissions@vit.ac.in", website:"vit.ac.in" },
+    { id:15, name:"SRM Institute", abbr:"SRM", location:"Chennai, Tamil Nadu", state:"Tamil Nadu", type:"Engineering", fees:250000, feesDisplay:"₹2.5L/yr", exam:"JEE Main", rank:"NIRF Engg #21", established:"1985", type2:"Private (Deemed)", affiliation:"Autonomous", courses:["B.Tech CSE","B.Tech ECE","B.Tech Mech","MBA","B.Sc Nursing","M.Tech AI","PhD"], facilities:["Library","Hostel","Sports Complex","Labs","Cafeteria","Wi-Fi","Medical Centre"], phone:"+91-44-27417000", email:"admissions@srmist.edu.in", website:"srmist.edu.in" },
+    { id:16, name:"Osmania University", abbr:"OU", location:"Hyderabad, Telangana", state:"Telangana", type:"Arts", fees:18000, feesDisplay:"₹18K/yr", exam:"CUET", rank:"NIRF Univ 51-100", established:"1918", type2:"Government", affiliation:"State University", courses:["B.A. Economics","B.Com","B.Sc Chemistry","LLB","M.A. Telugu","M.Com","PhD"], facilities:["Historic Library","Hostel","Labs","Sports Ground","Cafeteria","Museum"], phone:"+91-40-27098090", email:"registrar@osmania.ac.in", website:"osmania.ac.in" },
+    { id:17, name:"Hyderabad Central Univ", abbr:"HCU", location:"Hyderabad, Telangana", state:"Telangana", type:"Arts", fees:12000, feesDisplay:"₹12K/yr", exam:"CUET", rank:"NIRF University #14", established:"1974", type2:"Government", affiliation:"Central University", courses:["M.A. English","M.Sc Physics","MBA","M.Tech CSE","M.A. Linguistics","PhD"], facilities:["Library","Hostel","Research Labs","Sports Complex","Cafeteria","Wi-Fi"], phone:"+91-40-23133000", email:"registrar@uohyd.ac.in", website:"uohyd.ac.in" },
+    { id:18, name:"NIT Trichy", abbr:"NIT-T", location:"Tiruchirappalli, Tamil Nadu", state:"Tamil Nadu", type:"Engineering", fees:154200, feesDisplay:"₹1.54L/yr", exam:"JEE Main", rank:"NIRF Engg #8", established:"1964", type2:"Government", affiliation:"Autonomous – NIT Act", courses:["B.Tech CSE","B.Tech Mech","B.Tech Civil","B.Tech EEE","M.Tech CSE","MBA","PhD"], facilities:["Library","Hostel","Sports Complex","Labs","Cafeteria","Wi-Fi","Medical Centre"], phone:"+91-431-2503000", email:"admissions@nitt.edu", website:"nitt.edu" },
+    { id:19, name:"Symbiosis International", abbr:"SIU", location:"Pune, Maharashtra", state:"Maharashtra", type:"Management", fees:600000, feesDisplay:"₹6L/yr", exam:"CAT", rank:"NIRF Mgmt #21", established:"2002", type2:"Private (Deemed)", affiliation:"Autonomous", courses:["MBA","BBA","LLB","B.Sc IT","M.Sc Data Science","MBA HR","MBA Finance"], facilities:["Library","Hostel","Sports Complex","Labs","Cafeteria","Wi-Fi","International Centre"], phone:"+91-20-28116226", email:"siu@siu.edu.in", website:"siu.edu.in" },
+    { id:20, name:"Jamia Millia Islamia", abbr:"JMI", location:"New Delhi, Delhi", state:"Delhi", type:"Engineering", fees:30000, feesDisplay:"₹30K/yr", exam:"JEE Main", rank:"NIRF University #3", established:"1920", type2:"Government", affiliation:"Central University", courses:["B.Tech CSE","B.Tech ECE","B.A. Mass Comm","LLB","B.Ed","MBA","PhD"], facilities:["Library","Hostel","Sports Ground","Labs","Cafeteria","Wi-Fi","Museum"], phone:"+91-11-26981717", email:"info@jmi.ac.in", website:"jmi.ac.in" },
+    { id:21, name:"Calcutta Medical College", abbr:"CMC", location:"Kolkata, West Bengal", state:"West Bengal", type:"Medical", fees:50000, feesDisplay:"₹50K/yr", exam:"NEET", rank:"NIRF Medical #15", established:"1835", type2:"Government", affiliation:"WB Health Sciences Univ", courses:["MBBS","MD General Medicine","MS Surgery","B.Sc Nursing","MD Psychiatry","PhD Medical"], facilities:["Hospital","Research Labs","Hostel","Library","Anatomy Museum","Sports Ground"], phone:"+91-33-22551948", email:"principal@cmckolkata.in", website:"cmckolkata.in" },
+    { id:22, name:"Nalsar Univ of Law", abbr:"NALSAR", location:"Hyderabad, Telangana", state:"Telangana", type:"Law", fees:160000, feesDisplay:"₹1.6L/yr", exam:"CLAT", rank:"NIRF Law #3", established:"1998", type2:"Government", affiliation:"Autonomous – AP Act", courses:["BA LLB","LLM","MBA Law","PhD Law","PG Diploma Cyber Law","LLM IPR"], facilities:["Moot Court","Library","Hostel","Cafeteria","Wi-Fi","Sports Ground"], phone:"+91-40-23498104", email:"admissions@nalsar.ac.in", website:"nalsar.ac.in" },
+    { id:23, name:"IIT Madras", abbr:"IIT-M", location:"Chennai, Tamil Nadu", state:"Tamil Nadu", type:"Engineering", fees:234750, feesDisplay:"₹2.35L/yr", exam:"JEE Advanced", rank:"NIRF Engg #1", established:"1959", type2:"Government", affiliation:"Autonomous – IIT Act", courses:["B.Tech CSE","B.Tech Aerospace","B.Tech Ocean Engg","B.Tech Mech","M.Tech AI","MBA","PhD"], facilities:["Library","Hostel","Research Park","Sports Complex","Cafeteria","Wi-Fi","Innovation Hub"], phone:"+91-44-22574000", email:"registrar@iitm.ac.in", website:"iitm.ac.in" },
+    { id:24, name:"Christ University", abbr:"CU", location:"Bengaluru, Karnataka", state:"Karnataka", type:"Management", fees:180000, feesDisplay:"₹1.8L/yr", exam:"CAT", rank:"NIRF Rank 51-100", established:"1969", type2:"Private (Deemed)", affiliation:"Autonomous", courses:["BBA","MBA","B.Com","BA Economics","B.Sc Psychology","MA English","PhD"], facilities:["Library","Hostel","Sports Complex","Labs","Cafeteria","Wi-Fi","Chapel"], phone:"+91-80-40129100", email:"admissions@christuniversity.in", website:"christuniversity.in" },
+    { id:25, name:"Manipal Inst of Tech", abbr:"MIT", location:"Manipal, Karnataka", state:"Karnataka", type:"Engineering", fees:420000, feesDisplay:"₹4.2L/yr", exam:"JEE Main", rank:"NIRF Engg #41", established:"1957", type2:"Private (Deemed)", affiliation:"Manipal Academy", courses:["B.Tech CSE","B.Tech AI","B.Tech Robotics","B.Tech ECE","M.Tech CSE","MBA Tech","PhD"], facilities:["Library","Hostel","Sports Complex","Robotics Lab","Cafeteria","Wi-Fi","Innovation Studio"], phone:"+91-820-2923000", email:"admissions@manipal.edu", website:"manipal.edu/mit" }
+  ];
+ 
+  let selected = [null, null, null];
+ 
+  function populateDropdowns() {
+    const opts = colleges.map(c => `<option value="${c.id}">${c.name} (${c.type})</option>`).join('');
+    [0,1,2].forEach(i => {
+      document.getElementById('select'+i).innerHTML = '<option value="">-- Select a College --</option>' + opts;
+    });
+  }
+ 
+  function selectCollege(slot, id) {
+    if (!id) { clearSlot(slot); return; }
+    selected[slot] = colleges.find(c => c.id === parseInt(id));
+    document.getElementById('slot'+slot).classList.add('filled');
+    document.getElementById('name'+slot).style.display = 'block';
+    document.getElementById('name'+slot).textContent = selected[slot].name;
+    document.getElementById('clear'+slot).style.display = 'flex';
+    updateBtn();
+  }
+ 
+  function clearSlot(slot) {
+    selected[slot] = null;
+    document.getElementById('select'+slot).value = '';
+    document.getElementById('slot'+slot).classList.remove('filled');
+    document.getElementById('name'+slot).style.display = 'none';
+    document.getElementById('clear'+slot).style.display = 'none';
+    updateBtn();
+  }
+ 
+  function updateBtn() {
+    const n = selected.filter(s => s !== null).length;
+    document.getElementById('compareBtn').disabled = n < 2;
+    document.getElementById('hintText').textContent =
+      n < 2 ? 'Select at least 2 colleges to compare' :
+      n === 2 ? '✅ Ready! Click Compare Now' : '✅ 3 colleges selected!';
+  }
+ 
+  function buildComparison() {
+    const list = selected.filter(s => s !== null);
+    if (list.length < 2) return;
+    document.getElementById('compareSection').classList.add('show');
+    document.getElementById('resetWrap').style.display = 'block';
+    buildVerdicts(list);
+    buildTable(list);
+    document.getElementById('compareSection').scrollIntoView({ behavior: 'smooth' });
+  }
+ 
+  function buildVerdicts(list) {
+    const getRankNum = c => parseInt(c.rank.match(/\d+/)?.[0] || 999);
+    const verdicts = [
+      { label: '🏆 Best NIRF Rank',   winner: list.reduce((a,b) => getRankNum(a) <= getRankNum(b) ? a : b).name },
+      { label: '💰 Lowest Fees',       winner: list.reduce((a,b) => a.fees < b.fees ? a : b).name },
+      { label: '📚 Most Courses',      winner: list.reduce((a,b) => a.courses.length >= b.courses.length ? a : b).name },
+      { label: '🏛️ Oldest College',   winner: list.reduce((a,b) => parseInt(a.established) < parseInt(b.established) ? a : b).name },
+      { label: '🏫 Most Facilities',   winner: list.reduce((a,b) => a.facilities.length >= b.facilities.length ? a : b).name },
+    ];
+    document.getElementById('verdictGrid').innerHTML = verdicts.map(v => `
+      <div class="verdict-card">
+        <div class="verdict-label">${v.label}</div>
+        <div class="verdict-winner">${v.winner}</div>
+        <div class="verdict-badge">Winner 🏆</div>
+      </div>`).join('');
+  }
+ 
+  function buildTable(list) {
+    const minFees = Math.min(...list.map(c => c.fees));
+    const maxFees = Math.max(...list.map(c => c.fees));
+    const getRankNum = c => parseInt(c.rank.match(/\d+/)?.[0] || 999);
+    const minRank = Math.min(...list.map(getRankNum));
+    const maxCourses = Math.max(...list.map(c => c.courses.length));
+    const maxFacilities = Math.max(...list.map(c => c.facilities.length));
+ 
+    const header = `<tr class="header-row">
+      <th>Parameter</th>
+      ${list.map(c => `<th><div class="col-abbr">${c.abbr}</div>${c.name}<br><span class="col-rank">${c.rank}</span></th>`).join('')}
+    </tr>`;
+ 
+    const rows = [
+      { cat: '📍 BASIC INFO' },
+      { label: 'Location',     fn: c => c.location },
+      { label: 'State',        fn: c => c.state },
+      { label: 'Established',  fn: c => c.established },
+      { label: 'Type',         fn: c => `<span class="cell-tag tag-blue">${c.type2}</span>` },
+      { label: 'Affiliation',  fn: c => c.affiliation },
+      { cat: '📊 RANKING & FEES' },
+      { label: 'NIRF 2024 Rank', fn: c => `<strong>${c.rank}</strong>`, hl: c => getRankNum(c) === minRank ? 'best' : '' },
+      { label: 'Annual Fees',    fn: c => c.feesDisplay, hl: c => c.fees === minFees ? 'best' : c.fees === maxFees ? 'worst' : '' },
+      { label: 'Entrance Exam',  fn: c => `<span class="cell-tag tag-orange">${c.exam}</span>` },
+      { cat: '🎓 COURSES' },
+      { label: 'Stream',        fn: c => `<span class="cell-tag tag-blue">${c.type}</span>` },
+      { label: 'No. of Courses',fn: c => `<strong>${c.courses.length}</strong>`, hl: c => c.courses.length === maxCourses ? 'best' : '' },
+      { label: 'Top Courses',   fn: c => c.courses.slice(0,3).map(x => `<span class="cell-tag tag-green">${x}</span>`).join('') },
+      { cat: '🏫 CAMPUS' },
+      { label: 'No. of Facilities', fn: c => `<strong>${c.facilities.length}</strong>`, hl: c => c.facilities.length === maxFacilities ? 'best' : '' },
+      { label: 'Key Facilities',    fn: c => c.facilities.slice(0,4).map(x => `<span class="cell-tag tag-blue">${x}</span>`).join('') },
+      { cat: '📞 CONTACT' },
+      { label: 'Phone',   fn: c => c.phone },
+      { label: 'Email',   fn: c => `<a href="mailto:${c.email}" style="color:#1A56DB;font-size:12px">${c.email}</a>` },
+      { label: 'Website', fn: c => `<a href="https://${c.website}" target="_blank" style="color:#1A56DB">${c.website}</a>` },
+    ];
+ 
+    let body = '';
+    rows.forEach(row => {
+      if (row.cat) {
+        body += `<tr class="cat-row"><td colspan="${list.length+1}">${row.cat}</td></tr>`;
+      } else {
+        const cells = list.map(c => {
+          const h = row.hl ? row.hl(c) : '';
+          return `<td class="${h === 'best' ? 'best-cell best' : h === 'worst' ? 'worst' : ''}">${row.fn(c)}</td>`;
+        }).join('');
+        body += `<tr class="data-row"><td>${row.label}</td>${cells}</tr>`;
+      }
+    });
+ 
+    document.getElementById('compareTable').innerHTML = header + body;
+  }
+ 
+  function resetAll() {
+    [0,1,2].forEach(i => clearSlot(i));
+    document.getElementById('compareSection').classList.remove('show');
+    document.getElementById('resetWrap').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+ 
+  populateDropdowns();
+</script>
+</body>
+</html>

@@ -150,16 +150,31 @@ function renderCards(colleges) {
         const card = document.createElement('div');
         card.className = 'college-card';
         card.innerHTML = `
+            <div class="card-rating">${college.rating}</div>
             <div class="card-top">
                 <div class="card-logo">${college.abbr}</div>
-                <div>
+                <div class="card-grid">
                     <div class="card-name">${college.name}</div>
                     <div class="card-location">📍 ${college.location}</div>
                 </div>
             </div>
-            <p>${college.type} | ${college.rating}</p>
-            <p>Fees: ${college.feesDisplay}</p>
-            <button onclick="window.location.href='college.html?id=${college.id}'">View More</button>
+            <div class="card-badges">
+                <span class="badge badge-blue">${college.type}</span>
+                <span class="badge badge-orange">${college.exam || 'Various'}</span>
+                <span class="badge badge-green">${college.type2 || 'Institute'}</span>
+            </div>
+            <div class="card-divider"></div>
+            <div class="card-meta">
+                <div>
+                    <div class="meta-label">Annual Fees</div>
+                    <div class="meta-val">${college.feesDisplay}</div>
+                </div>
+                <div>
+                    <div class="meta-label">Established</div>
+                    <div class="meta-val">${college.established || 'N/A'}</div>
+                </div>
+            </div>
+            <button class="card-btn" onclick="window.location.href='college.html?id=${college.id}'">View Details</button>
         `;
         grid.appendChild(card);
     });

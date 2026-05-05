@@ -141,7 +141,7 @@
 
 async function loadColleges() {
   try {
-    const response = await fetch('http://localhost:5000/api/colleges');
+    const response = await fetch('https://collegefind-backend-production.up.railway.app/api/colleges');
     colleges = await response.json();
     renderCards(colleges);
   } catch(err) {

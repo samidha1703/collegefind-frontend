@@ -148,7 +148,7 @@ function renderCards(colleges) {
     document.getElementById('noResults').style.display = 'none';
     colleges.forEach(college => {
         const card = document.createElement('div');
-        card.className = 'card';
+        card.className = 'college-card';
         card.innerHTML = `
             <h3>${college.name}</h3>
             <p>${college.location}</p>
